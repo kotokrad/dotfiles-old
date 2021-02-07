@@ -19,9 +19,11 @@ let g:coc_global_extensions = [
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 
 " DISABLED
-"Plug 'PotatoesMaster/i3-vim-syntax'
-"Plug 'kovetskiy/sxhkd-vim'
+" Plug 'PotatoesMaster/i3-vim-syntax'
+" Plug 'kovetskiy/sxhkd-vim'
 " Plug 'junegunn/goyo.vim'
+" Plug 'Yggdroot/indentLine'
+" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 
 " UI
 Plug 'morhetz/gruvbox'
@@ -30,7 +32,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'ap/vim-buftabline'
 Plug 'ryanoasis/vim-devicons'
 Plug 'benbusby/vim-earthbound-themes'
-" Plug 'Yggdroot/indentLine'
 
 " FUNCTIONAL
 Plug 'tpope/vim-sensible'
@@ -40,7 +41,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'easymotion/vim-easymotion'
 Plug 'scrooloose/nerdtree'
-" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'rbgrouleff/bclose.vim'
@@ -174,7 +174,6 @@ call plug#end()
 
 " Markdown fenced languages
   let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'typescript', 'ts=typescript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
-
 
 
 " PLUGINS
