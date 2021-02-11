@@ -9,10 +9,10 @@ if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autolo
 endif
 
 " CoC extensions should be defined before plugin install
+  " \ 'coc-pairs',
 let g:coc_global_extensions = [
   \ 'coc-tsserver',
   \ 'coc-json',
-  \ 'coc-pairs',
   \ 'coc-prettier'
   \ ]
 
@@ -24,21 +24,24 @@ call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"
 " Plug 'junegunn/goyo.vim'
 " Plug 'Yggdroot/indentLine'
 " Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+" Plug 'sbdchd/neoformat'
+" Plug 'christoomey/vim-tmux-navigator'
 
 " UI
 Plug 'morhetz/gruvbox'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'tomasiser/vim-code-dark'
+Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'
 Plug 'ryanoasis/vim-devicons'
-Plug 'benbusby/vim-earthbound-themes'
+Plug 'norcalli/nvim-colorizer.lua'
 
 " FUNCTIONAL
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-fugitive'
 Plug 'easymotion/vim-easymotion'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -49,12 +52,15 @@ Plug 'godlygeek/tabular'
 
 " DEV
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() } }
+Plug 'windwp/nvim-autopairs'
 Plug 'neovimhaskell/haskell-vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim', { 'branch': 'styled' }
+" Plug 'tpope/vim-fugitive'
+Plug 'itchyny/vim-gitbranch'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
 Plug 'SirVer/ultisnips'
@@ -65,10 +71,9 @@ Plug 'vimwiki/vimwiki'
 
 call plug#end()
 
-" Some basic
+" Default options
 	nnoremap c "_c
 	set nocompatible
-	filetype plugin on
 	syntax on
 	set encoding=utf-8
 	set number relativenumber
@@ -82,6 +87,14 @@ call plug#end()
   set cursorline
   set go=a
   set mouse=a
+  set cmdheight=1                           " only one line for commands
+  set shortmess+=c                          " don't need to press enter so often
+  set completeopt=menuone,noinsert,noselect " better autocomplete options
+  set signcolumn=yes                        " add a column for sings (e.g. GitGutter, LSP, ...)
+  set termguicolors
+  set t_Co=256
+  set t_ut=
+  filetype plugin indent on                 " enable detection, plugins and indents
 
 " Misc
   " set noerrorbells
@@ -93,8 +106,9 @@ call plug#end()
   " set undodir="~/.local/share/nvim/undodir"
 
 " Theme
+  let g:gruvbox_italic=1
+  let g:gruvbox_contrast_dark='hard'
   colorscheme gruvbox
-  " colorscheme monokai
   set background=dark
 
 " Enable autocompletion:
@@ -183,17 +197,42 @@ call plug#end()
 	" map <leader>f :Goyo <CR>
   "\| set bg=light \| set linebreak<CR>
 
-" Airline plugin
-  let g:airline_powerline_fonts = 1
-  let g:airline_theme='solarized_flood'
+" Airline
+  " let g:airline_powerline_fonts = 1
+  " let g:airline_theme='solarized_flood'
   " let g:airline_solarized_bg='dark'
 
-" CtrlP plugin
+" Lightline
+  " \ 'colorscheme': 'darcula',
+  " \ 'colorscheme': 'solarized',
+  " \ 'colorscheme': 'one',
+  let g:lightline = {
+      \ 'colorscheme': 'codedark',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'gitbranch#name',
+      \   'filetype': 'MyFiletype',
+      \   'fileformat': 'MyFileformat',
+      \ },
+      \ }
+
+  function! MyFiletype()
+    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+  endfunction
+
+  function! MyFileformat()
+    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+  endfunction
+
+" CtrlP
 	" let g:ctrlp_map = '<c-p>'
 	" let g:ctrlp_cmd = 'CtrlP'
 	" let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
-" FZF plugin
+" FZF
   let g:fzf_layout = { 'down': '40%' }
   nnoremap <C-f> :Ag<space>
   nnoremap <C-p> :Files<CR>
@@ -297,24 +336,38 @@ call plug#end()
   let g:vim_jsx_pretty_highlight_close_tag = 1
   let g:vim_jsx_pretty_colorful_config = 1
 
-" Tree-Sitter plugin (syntax highlighting, doesn't support JSX yet)
+" Tree-Sitter (syntax highlighting, doesn't support JSX yet)
 lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  -- install all maintained languages
-  ensure_installed = "maintained",
-  -- or list of languages
-  -- ensure_installed = { "javascript", "typescript", "bash", "go", "json", "html", "lua", "python", "css" }
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    -- disable = { "c", "rust" },  -- list of language that will be disabled
-  },
-  -- tree-sitter based indentation
-  indent = {
-    enable = true
+  require'nvim-treesitter.configs'.setup {
+    -- install all maintained languages
+    ensure_installed = "maintained",
+    -- or list of languages
+    -- ensure_installed = { "javascript", "typescript", "bash", "go", "json", "html", "lua", "python", "css" }
+    highlight = {
+      enable = true,              -- false will disable the whole extension
+      -- disable = { "c", "rust" },  -- list of language that will be disabled
+    },
+    -- tree-sitter based indentation
+    indent = {
+      enable = true
+    }
   }
-}
 EOF
 
-" VimWiki plugin (notes)
-let g:vimwiki_list = [{'path': '~/notes/'}]
-let g:vimwiki_global_ext = 0
+" Autopairs
+  lua require('nvim-autopairs').setup()
+
+" Colorizer
+  lua require('colorizer').setup()
+
+" VimWiki (notes)
+  let g:vimwiki_list = [{'path': '~/notes/'}]
+  let g:vimwiki_global_ext = 0
+
+" Tmux-navigator
+  " let g:tmux_navigator_no_mappings = 1
+  " nnoremap <silent> {Left-Mapping} :TmuxNavigateLeft<cr>
+  " nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
+  " nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
+  " nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
+  " nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
