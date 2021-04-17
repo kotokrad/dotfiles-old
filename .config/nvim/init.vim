@@ -1,4 +1,4 @@
-" let mapleader =","
+let mapleader =","
 
 " Install VimPlug
 if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
@@ -28,6 +28,8 @@ call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"
 " Plug 'vim-airline/vim-airline-themes'
 " Plug 'sbdchd/neoformat'
 " Plug 'christoomey/vim-tmux-navigator'
+" Plug 'tpope/vim-fugitive'
+" Plug 'Xuyuanp/yanil'
 
 " UI
 Plug 'morhetz/gruvbox'
@@ -35,6 +37,7 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'itchyny/lightline.vim'
 Plug 'ap/vim-buftabline'
 Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 Plug 'norcalli/nvim-colorizer.lua'
 
 " FUNCTIONAL
@@ -54,12 +57,12 @@ Plug 'godlygeek/tabular'
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() } }
 Plug 'windwp/nvim-autopairs'
 Plug 'neovimhaskell/haskell-vim'
+Plug 'purescript-contrib/purescript-vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim', { 'branch': 'styled' }
-" Plug 'tpope/vim-fugitive'
 Plug 'itchyny/vim-gitbranch'
 Plug 'jreybert/vimagit'
 Plug 'airblade/vim-gitgutter'
@@ -104,12 +107,6 @@ call plug#end()
   " set noswapfile
   " set nobackup
   " set undodir="~/.local/share/nvim/undodir"
-
-" Theme
-  let g:gruvbox_italic=1
-  let g:gruvbox_contrast_dark='hard'
-  colorscheme gruvbox
-  set background=dark
 
 " Enable autocompletion:
 	set wildmode=longest,list,full
@@ -265,6 +262,18 @@ call plug#end()
   "     \ "theme.text_colour_set": "nerdtree_syntax_dark"
   "     \ }
 
+" Yanil
+  " DISABLED " silent!
+  " lua require("_yanil").setup()
+  " nmap <C-b> :YanilToggle<CR>
+  " DISABLED " nmap <C-b> :lua require('nvim-web-devicons').setup()<CR> :YanilToggle<CR>
+
+  " augroup dotvim_auto_close_yanil
+  "   autocmd!
+  "   autocmd BufEnter Yanil if len(nvim_list_wins()) == 1 | q | endif
+  "   autocmd FocusGained * silent! lua require('yanil/git').update()
+  " augroup end
+
 " Tabularize
   " if exists(":Tabularize") " Doesn't work
     nmap <Leader>t= :Tabularize /=<CR>
@@ -338,7 +347,7 @@ call plug#end()
 
 " Tree-Sitter (syntax highlighting, doesn't support JSX yet)
 lua <<EOF
-  require'nvim-treesitter.configs'.setup {
+  require('nvim-treesitter.configs').setup {
     -- install all maintained languages
     ensure_installed = "maintained",
     -- or list of languages
@@ -360,9 +369,18 @@ EOF
 " Colorizer
   lua require('colorizer').setup()
 
+" Colorful Devicons
+  lua require('nvim-web-devicons').setup()
+
+  augroup dotvim_nvim_devicons
+    autocmd!
+    autocmd ColorScheme * lua require('nvim-web-devicons').setup()
+  augroup end
+
 " VimWiki (notes)
-  let g:vimwiki_list = [{'path': '~/notes/'}]
+  let g:vimwiki_list = [{'path': '~/notes/', 'syntax': 'markdown', 'ext': '.md'}]
   let g:vimwiki_global_ext = 0
+  let g:vimwiki_table_mappings = 0 " Disable Tab in input mode
 
 " Tmux-navigator
   " let g:tmux_navigator_no_mappings = 1
@@ -371,3 +389,11 @@ EOF
   " nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
   " nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
   " nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
+
+
+" THEME
+" =================================
+  let g:gruvbox_italic=1
+  let g:gruvbox_contrast_dark='hard'
+  colorscheme gruvbox
+  set background=dark
