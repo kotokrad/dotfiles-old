@@ -1,0 +1,12 @@
+{
+  "diagnostic.maxWindowWidth": 160,
+  "diagnostic.maxWindowHeight": 30,
+  "languageserver": {
+    "purescript": {
+      "command": "purescript-language-server",
+      "args": ["--stdio", "--config {}"],
+      "filetypes": ["purescript"],
+      "rootPatterns": ["bower.json", "psc-package.json", "spago.dhall"]
+    }
+  }
+}
