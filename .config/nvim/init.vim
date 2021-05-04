@@ -314,6 +314,7 @@ call plug#end()
   nmap <silent> gr <Plug>(coc-references)
   nmap <silent> [g <Plug>(coc-diagnostic-prev)
   nmap <silent> ]g <Plug>(coc-diagnostic-next)
+  nnoremap <silent> K :call CocActionAsync('doHover')<cr>
 
   " Map function and class text objects
   " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
