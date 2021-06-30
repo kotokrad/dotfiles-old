@@ -488,10 +488,10 @@ main = do
                          , ppHidden          = xmobarColor xmobarDefaultColor ""
                          , ppHiddenNoWindows = xmobarColor xmobarHiddenWorkspaceColor ""
                          , ppTitle           = xmobarColor xmobarActiveTitleColor "" . shorten 40
-                         , ppSep             = xmobarColor xmobarMutedColor "" " \58913 "
+                         , ppSep             = "  "
                          , ppOutput          = hPutStrLn xmproc
                          , ppExtras          = [logTitles]
-                         , ppOrder           = \(ws:_:t:ts:_) -> ws : (" " <> t) : [xmobarColor xmobarInactiveTitleColor "" ts]
+                         , ppOrder           = \(ws:_:t:ts:_) -> ws : t : [xmobarColor xmobarInactiveTitleColor "" ts]
                        }
                        >> updatePointer (0.75, 0.75) (0.75, 0.75)
          }
