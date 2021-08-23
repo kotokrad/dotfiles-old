@@ -10,7 +10,7 @@ Config {
        , commands = [ Run StdinReader
 
                     , Run Alsa "default" "Master"
-                          [ "-t", "<status> <volume>%"
+                          [ "-t", "<fc=#98971a><status> <volume>%</fc>"
                           , "-H", "60"
                           , "--"
                           , "--on", ""
@@ -31,30 +31,30 @@ Config {
 --                           50
 
                     , Run Cpu
-                          [ "--template", "<fc=#cc241d><fn=1></fn></fc> <total>%"
-                          , "--Low","3"
-                          , "--High","50"
-                          , "--low","#bbc2cf"
-                          , "--normal","#bbc2cf"
-                          , "--high","#cc241d" ]
+                          [ "--template", "<fc=#cc241d><fn=1></fn> <total>%</fc>" ]
+                          -- , "--Low","3"
+                          -- , "--High","50"
+                          -- , "--low","#bbc2cf"
+                          -- , "--normal","#bbc2cf"
+                          -- , "--high","#cc241d" ]
                           50
 
                     , Run Memory
-                          ["-t","<fc=#d79921><fn=1></fn></fc> <usedratio>%"
-                          ,"-H","80"
-                          ,"-L","10"
-                          ,"-l","#bbc2cf"
-                          ,"-n","#bbc2cf"
-                          ,"-h","#cc241d" ]
+                          ["-t","<fc=#d79921><fn=1></fn> <usedratio>%</fc>" ]
+                          -- ,"-H","80"
+                          -- ,"-L","10"
+                          -- ,"-l","#bbc2cf"
+                          -- ,"-n","#bbc2cf"
+                          -- ,"-h","#cc241d" ]
                           50
 
                     , Run DiskU
-                          [("/", "<fc=#458588><fn=1></fn></fc> <free>")]
-                          [ "-L", "5"
-                          , "-m", "1"
-                          , "-p", "3"
-                          , "--normal", "#bbc2cf"
-                          , "--low", "#cc241d" ]
+                          [("/", "<fc=#458588><fn=1></fn> <free></fc>")] []
+                          -- [ "-L", "5"
+                          -- , "-m", "1"
+                          -- , "-p", "3"
+                          -- , "--normal", "#bbc2cf"
+                          -- , "--low", "#cc241d" ]
                           20
 
                     , Run Date "%a %b %_d %I:%M" "date" 300
@@ -83,5 +83,5 @@ Config {
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %alsa:default:Master% <fc=#7c6f64></fc> %cpu% <fc=#7c6f64></fc> %memory% <fc=#7c6f64></fc> %disku% <fc=#7c6f64></fc> %kbd% <fc=#7c6f64></fc> %date% %trayerpad%"
+       , template = "%StdinReader% }{ %alsa:default:Master%  %cpu%  %memory%  %disku% <fc=#7c6f64></fc> %kbd% <fc=#7c6f64></fc> %date% %trayerpad%"
        }

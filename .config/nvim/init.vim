@@ -19,7 +19,6 @@ let g:coc_global_extensions = [
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 
 " DISABLED
-" Plug 'PotatoesMaster/i3-vim-syntax'
 " Plug 'kovetskiy/sxhkd-vim'
 " Plug 'junegunn/goyo.vim'
 " Plug 'Yggdroot/indentLine'
@@ -60,7 +59,8 @@ Plug 'neovimhaskell/haskell-vim'
 Plug 'purescript-contrib/purescript-vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'maxmellon/vim-jsx-pretty'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'TovarishFin/vim-solidity'
+" Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim', { 'branch': 'styled' }
 Plug 'itchyny/vim-gitbranch'
@@ -90,8 +90,10 @@ call plug#end()
   set cursorline
   set go=a
   set mouse=a
+  set splitbelow splitright                 " non-retarded splits
   set cmdheight=1                           " only one line for commands
   set shortmess+=c                          " don't need to press enter so often
+  set wildmode=longest,list,full            " enable autocompletion
   set completeopt=menuone,noinsert,noselect " better autocomplete options
   set signcolumn=yes                        " add a column for sings (e.g. GitGutter, LSP, ...)
   set termguicolors
@@ -99,35 +101,17 @@ call plug#end()
   set t_ut=
   filetype plugin indent on                 " enable detection, plugins and indents
 
-" Misc
-  " set noerrorbells
-  " set nu
-  " set nowrap
-  " set smartcase
-  " set noswapfile
-  " set nobackup
-  " set undodir="~/.local/share/nvim/undodir"
-
-" Enable autocompletion:
-	set wildmode=longest,list,full
-
-" Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
-	set splitbelow splitright
-
 " Move lines around
   nnoremap <C-j> :m .+1<CR>==
   nnoremap <C-k> :m .-2<CR>==
   vnoremap <C-j> :m '>+1<CR>gv=gv
   vnoremap <C-k> :m '<-2<CR>gv=gv
 
-" Shortcutting split navigation, saving a keypress:
-  " nnoremap <leader>c :bd<CR>
-  " bclose plugin works better than :bd
+" Split navigation/manipulation
   nnoremap <leader>c :Bclose<CR>
-  map <C-h> <C-w>h
-	map <C-l> <C-w>l
-	" map <C-j> <C-w>j
-	" map <C-k> <C-w>k
+  " TODO: split navigation hotkeys
+  " map <C-l> <C-w>l
+  " map <C-h> <C-w>h
 
 " Buffer cycling
 	nnoremap <C-l> :bnext<CR>
@@ -144,7 +128,7 @@ call plug#end()
 
 " Replace all is aliased to S.
 	nnoremap S :%s//g<Left><Left>
-	vnoremap S :'<,'>s//g<Left><Left>
+	vmap S :s//g<Left><Left>
 
 " Map + for easier clipboard access
   nnoremap + "+
@@ -160,16 +144,11 @@ call plug#end()
 	autocmd BufWritePre * %s/\s\+$//e
 	autocmd BufWritepre * %s/\n\+\%$//e
 
-" When shortcut files are updated, renew bash and ranger configs with new material:
-	autocmd BufWritePost bm-files,bm-dirs !shortcuts
-
-" Run xrdb whenever Xdefaults or Xresources are updated.
-	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
-
 " Run Prettier before writing js files
 	autocmd BufWritePre *.{js,jsx,ts,tsx} Prettier
 
 " Fix syntax highlighting in long files
+" UPD: still needed after switching to treesitter?
   autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
   autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 
@@ -185,6 +164,16 @@ call plug#end()
 
 " Markdown fenced languages
   let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'typescript', 'ts=typescript', 'json=javascript', 'ruby', 'sass', 'xml', 'html']
+
+" SPECIAL
+" (requires some external scripts)
+" =================================
+
+" When shortcut files are updated, renew bash and ranger configs with new material:
+	autocmd BufWritePost bm-files,bm-dirs !shortcuts
+
+" Run xrdb whenever Xdefaults or Xresources are updated.
+	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
 
 " PLUGINS
